@@ -1,0 +1,6 @@
+2021-04-15T11:23:45.3307594+07:00  [INF] Worker Start: 04/15/2021 11:23:45 +07:00 (6f0f350a)
+2021-04-15T11:23:45.3847507+07:00  [INF] Application started. Press Ctrl+C to shut down. (dcaefe54)
+2021-04-15T11:23:45.3849340+07:00  [INF] Hosting environment: "Production" (c3307c92)
+2021-04-15T11:23:45.3849632+07:00  [INF] Content root path: "\\IT-public\DEPARTMENT\FHO\peter\henry\deploy-dmr\service\autorestartservice" (b5d60022)
+2021-04-15T11:23:48.0355871+07:00  [INF] Application is shutting down... (90f52c38)
+2021-04-15T11:23:48.0473575+07:00  [INF] Worker Stop: 04/15/2021 11:23:48 +07:00 (924979d8)
