@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "H:\\a_2021\\setup\\Configuration\\Configuration.csproj": {}
+    "D:\\a_todolist\\2021\\SetupScaling\\Configuration.csproj": {}
   },
   "projects": {
-    "H:\\a_2021\\setup\\Configuration\\Configuration.csproj": {
+    "D:\\a_todolist\\2021\\SetupScaling\\Configuration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "H:\\a_2021\\setup\\Configuration\\Configuration.csproj",
+        "projectUniqueName": "D:\\a_todolist\\2021\\SetupScaling\\Configuration.csproj",
         "projectName": "Configuration",
-        "projectPath": "H:\\a_2021\\setup\\Configuration\\Configuration.csproj",
-        "packagesPath": "C:\\Users\\sy.pham\\.nuget\\packages\\",
-        "outputPath": "H:\\a_2021\\setup\\Configuration\\obj\\",
+        "projectPath": "D:\\a_todolist\\2021\\SetupScaling\\Configuration.csproj",
+        "packagesPath": "C:\\Users\\Henry Pham\\.nuget\\packages\\",
+        "outputPath": "D:\\a_todolist\\2021\\SetupScaling\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\sy.pham\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Henry Pham\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -43,10 +43,6 @@
             "Dapper": {
               "target": "Package",
               "version": "[2.0.90, )"
-            },
-            "FireSharp": {
-              "target": "Package",
-              "version": "[2.0.4, )"
             },
             "Microsoft.AspNet.SignalR.Client": {
               "target": "Package",
@@ -87,7 +83,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }

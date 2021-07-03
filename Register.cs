@@ -1,16 +1,8 @@
 ﻿using Configuration.heplers;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using FireSharp.Config;
-using FireSharp.Interfaces;
-using FireSharp.Response;
 using System.Configuration;
 using System.Reflection;
 using System.Data.SqlClient;
@@ -20,15 +12,8 @@ namespace Configuration
 {
     public partial class Register : Form
     {
-        Form form1 = new Form1();
         Form _me = new Form();
-        IFirebaseConfig config = new FirebaseConfig
-        {
-            AuthSecret = "5QamCsWS8IRbwXZWymiuGJYvOfwQwZQVc7QzZ6Ml222",
-            BasePath = "https://scalingmachine-c10ed-default-rtdb.asia-southeast1.firebasedatabase.app/",
-        };
-        IFirebaseClient _client;
-        private string DriveSerialNumber = Common.GetDriveSerialNumber().ToGenerateLicenseKey();
+        private string DriveSerialNumber = Common.GetDriveSerialNumber();
          IDbConnection db = new SqlConnection("Server=.;Database=license;user id=sa;password=shc@1234");
         public Register()
         {
@@ -76,17 +61,26 @@ namespace Configuration
                     return;
                 }
             }
-          
-            var param = new DynamicParameters();
+            if (license.HardwareId == DriveSerialNumber && license.Status.Trim() == "1" && license.Count > 1)
+            {
+                MessageBox.Show("This key has already been used!", "Error",
+                                                       MessageBoxButtons.OK,
+                                                       MessageBoxIcon.Warning);
+                return;
+            }
+                var param = new DynamicParameters();
             param.Add("LicenseKey", licenseKey);
             param.Add("HardwareId", DriveSerialNumber);
-            string query2 = "update Licenses set HardwareId = @HardwareId where LicenseKey = @LicenseKey";
+            param.Add("Count", 1);
+            string query2 = "update Licenses set HardwareId = @HardwareId, Count = @Count where LicenseKey = @LicenseKey";
             db.Execute(query2, param);
             string query3 = "select * from Licenses where LicenseKey = @licenseKey";
             var license2 = db.Query<dynamic>(query3, new { licenseKey = licenseKey }).SingleOrDefault();
 
-            if (license2.HardwareId == DriveSerialNumber && license.Status)
+            if (license2.HardwareId == DriveSerialNumber && license2.Status.Trim() == "1" && license2.Count == 1)
             {
+                UpdateLicense();
+                Form form1 = new Form1();
                 form1.Show();
                 _me.Hide();
             }
@@ -125,17 +119,6 @@ OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
                 configuration.AppSettings.Settings["licenseKey"].Value = DriveSerialNumber;
                 configuration.Save();
                 ConfigurationManager.RefreshSection("appSettings");
-
-                var id = DriveSerialNumber;
-                var data = new
-                {
-                    Id = id,
-                    UserName = id,
-                    Password = DriveSerialNumber
-                };
-                SetResponse setResponse = _client.Set("Scalings", data);
-                textBox1.Text = GetLicenseKey() + Common.TOKEN;
-
             }
             catch (Exception )
             {
@@ -149,18 +132,21 @@ OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
         private void Register_Load(object sender, EventArgs e)
         {
             _me = (Form)sender;
-            _client = new FireSharp.FirebaseClient(config);
-            if (_client == null)
-            {
-                MessageBox.Show("Connection is not established", "Error",
-                                                  MessageBoxButtons.OK,
-                                                  MessageBoxIcon.Error);
-            } 
+            //_client = new FireSharp.FirebaseClient(config);
+            //if (_client == null)
+            //{
+            //    MessageBox.Show("Connection is not established", "Error",
+            //                                      MessageBoxButtons.OK,
+            //                                      MessageBoxIcon.Error);
+            //} 
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            UpdateLicense();
+            MessageBox.Show("Can not use register function. Please contact administrator!", "Warning",
+                                                      MessageBoxButtons.OK,
+                                                      MessageBoxIcon.Warning);
+            //UpdateLicense();
         }
     }
 }

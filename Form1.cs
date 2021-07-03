@@ -20,7 +20,7 @@ namespace Configuration
          
 
             var envPath = Environment.CurrentDirectory;
-            root = ConfigurationManager.AppSettings["root"].ToString();
+            //root = ConfigurationManager.AppSettings["root"].ToString();
 
             SerialPort3kg = new SerialPort();
             SerialPort30kg = new SerialPort();
