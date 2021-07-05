@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "H:\\a_2021\\setup\\Configuration\\Configuration.csproj": {}
+    "H:\\a_2021\\a_PhanMemCan\\SetupScaling\\Configuration.csproj": {}
   },
   "projects": {
-    "H:\\a_2021\\setup\\Configuration\\Configuration.csproj": {
+    "H:\\a_2021\\a_PhanMemCan\\SetupScaling\\Configuration.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "H:\\a_2021\\setup\\Configuration\\Configuration.csproj",
+        "projectUniqueName": "H:\\a_2021\\a_PhanMemCan\\SetupScaling\\Configuration.csproj",
         "projectName": "Configuration",
-        "projectPath": "H:\\a_2021\\setup\\Configuration\\Configuration.csproj",
+        "projectPath": "H:\\a_2021\\a_PhanMemCan\\SetupScaling\\Configuration.csproj",
         "packagesPath": "C:\\Users\\sy.pham\\.nuget\\packages\\",
-        "outputPath": "H:\\a_2021\\setup\\Configuration\\obj\\publish\\win-x64\\",
+        "outputPath": "H:\\a_2021\\a_PhanMemCan\\SetupScaling\\obj\\publish\\win-x64\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sy.pham\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,9 +40,9 @@
         "net5.0-windows7.0": {
           "targetAlias": "net5.0-windows",
           "dependencies": {
-            "FireSharp": {
+            "Dapper": {
               "target": "Package",
-              "version": "[2.0.4, )"
+              "version": "[2.0.90, )"
             },
             "Microsoft.AspNet.SignalR.Client": {
               "target": "Package",
@@ -51,6 +51,10 @@
             "Microsoft.AspNetCore.SignalR.Client.Core": {
               "target": "Package",
               "version": "[5.0.6, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.8.2, )"
             },
             "System.IO.Ports": {
               "target": "Package",

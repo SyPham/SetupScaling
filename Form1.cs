@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Configuration.heplers;
+using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
 using System.IO.Ports;
@@ -17,7 +19,7 @@ namespace Configuration
         Form _me = new Form();
         public Form1()
         {
-         
+
 
             var envPath = Environment.CurrentDirectory;
             //root = ConfigurationManager.AppSettings["root"].ToString();
@@ -34,15 +36,17 @@ namespace Configuration
             string[] BaudRate = { "1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200" };
             comboBox_BaudRate3kg.Items.AddRange(BaudRate);
             comboBox_BaudRate.Items.AddRange(BaudRate);
+            string[] Ports3 = { "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM10", "COM11", "COM12", "COM13", "COM14", "COM15" };
+            string[] Ports30 = { "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "COM10", "COM11", "COM12", "COM13", "COM14", "COM15" };
 
-            string[] allPorts3 = SerialPort.GetPortNames(); //Get tất cả các port có sẵn
-            string[] allPorts30 = SerialPort.GetPortNames(); //Get tất cả các port có sẵn
+            string[] allPorts3 = Ports3;
+            string[] allPorts30 = Ports30;
             comboBox_COM3kg.Items.Clear();
             comboBox_COM30kg.Items.Clear();
             comboBox_COM3kg.DataSource = allPorts3; // Thêm vào listbox
             comboBox_COM30kg.DataSource = allPorts30; // Thêm vào listbox
-            DisplaySetting30kg(true);
-            DisplaySetting3kg(true);
+            //DisplaySetting30kg(true);
+            //DisplaySetting3kg(true);
         }
 
         private void DataReceive3kg(object obj, SerialDataReceivedEventArgs e)
@@ -150,10 +154,10 @@ namespace Configuration
                 appsettings["PortName"] = com;
                 var update = heplers.Common.UpdateFile(value);
                 var res = heplers.Common.WriteFile(path, update);
-                if (res)
-                    MessageBox.Show("Update successfully!", "Update settings",
-                                                    MessageBoxButtons.OK,
-                                                    MessageBoxIcon.Information);
+                if (res) { }
+                //MessageBox.Show("Update successfully!", "Update settings",
+                //                                MessageBoxButtons.OK,
+                //                                MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Update failded! Please try again!", "Update settings",
                                                MessageBoxButtons.OK,
@@ -181,10 +185,10 @@ namespace Configuration
                 appsettings["PortName"] = com;
                 var update = heplers.Common.UpdateFile(value);
                 var res = heplers.Common.WriteFile(path, update);
-                if (res)
-                    MessageBox.Show("Update successfully!", "Update settings",
-                                                    MessageBoxButtons.OK,
-                                                    MessageBoxIcon.Information);
+                if (res) { }
+                //MessageBox.Show("Update successfully!", "Update settings",
+                //                                MessageBoxButtons.OK,
+                //                                MessageBoxIcon.Information);
                 else
                     MessageBox.Show("Update failded! Please try again!", "Update settings",
                                                MessageBoxButtons.OK,
@@ -201,16 +205,16 @@ namespace Configuration
         }
         private void button_update30kg_Click(object sender, EventArgs e)
         {
-            var com = comboBox_COM30kg.SelectedItem.ToString();
-            UpdateWeighingScale30kg(com);
-            DisplaySetting30kg(false);
+            //var com = comboBox_COM30kg.SelectedItem.ToString();
+            //UpdateWeighingScale30kg(com);
+            //DisplaySetting30kg(false);
         }
 
         private void button_update3kg_Click(object sender, EventArgs e)
         {
-            var com = comboBox_COM3kg.SelectedItem.ToString();
-            UpdateWeighingScale3kg(com);
-            DisplaySetting3kg(false);
+            //var com = comboBox_COM3kg.SelectedItem.ToString();
+            //UpdateWeighingScale3kg(com);
+            //DisplaySetting3kg(false);
 
         }
 
@@ -219,16 +223,19 @@ namespace Configuration
 
         }
 
-        private void comboBox_weighing30kg_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             _me = (Form)sender;
             comboBox_BaudRate.SelectedIndex = 3;
             comboBox_BaudRate3kg.SelectedIndex = 3;
+
+            comboBox_COM3kg.SelectedItem = "COM3"; // COM3
+            comboBox_COM30kg.SelectedItem = "COM2"; // COM2
+            new ToolTip().SetToolTip(this.button_addWebsite, "To add a website to communicate with the weighing scale");
+            new ToolTip().SetToolTip(this.button_driver, "Install weighing scale service and weighing scale driver");
+            new ToolTip().SetToolTip(this.button_About, "Zalo: 0865978241\nEmail: sales3.mrthanh@gmail.com");
+            new ToolTip().SetToolTip(this.button_service, "If setting is ready, restart service");
         }
 
         private void label7_Click(object sender, EventArgs e)
@@ -287,6 +294,15 @@ namespace Configuration
 
         private void button_Connect3kg_Click(object sender, EventArgs e)
         {
+            if (comboBox_COM30kg.Text == comboBox_COM3kg.Text)
+            {
+                const string caption = "Warning";
+                const string message = "Unable to select the same COM";
+                var result = MessageBox.Show(message, caption,
+                                                 MessageBoxButtons.OK,
+                                                 MessageBoxIcon.Warning);
+                return;
+            }
             if (!SerialPort3kg.IsOpen)
             {
                 SerialPort3kg.PortName = comboBox_COM3kg.Text;
@@ -295,9 +311,9 @@ namespace Configuration
                 {
                     SerialPort3kg.Open();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    const string message = "Unable to select the same COM";
+                    string message = ex.Message;
                     const string caption = "Warning";
                     var result = MessageBox.Show(message, caption,
                                                  MessageBoxButtons.OK,
@@ -309,6 +325,16 @@ namespace Configuration
 
         private void button_Connect30kg_Click(object sender, EventArgs e)
         {
+            if (comboBox_COM30kg.Text == comboBox_COM3kg.Text)
+            {
+                const string caption = "Warning";
+                const string message = "Unable to select the same COM";
+                var result = MessageBox.Show(message, caption,
+                                                 MessageBoxButtons.OK,
+                                                 MessageBoxIcon.Warning);
+                return;
+
+            }
             if (!SerialPort30kg.IsOpen)
             {
                 SerialPort30kg.PortName = comboBox_COM30kg.Text;
@@ -317,9 +343,9 @@ namespace Configuration
                 {
                     SerialPort30kg.Open();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    const string message = "Unable to select the same COM";
+                    string message = ex.Message;
                     const string caption = "Warning";
                     var result = MessageBox.Show(message, caption,
                                                  MessageBoxButtons.OK,
@@ -330,8 +356,8 @@ namespace Configuration
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-             _me.Dispose();
-             _me.Close();
+            _me.Dispose();
+            _me.Close();
             if (SerialPort30kg.IsOpen) SerialPort30kg.Close();
             if (SerialPort3kg.IsOpen) SerialPort3kg.Close();
 
@@ -360,8 +386,8 @@ namespace Configuration
                 }
                 if (isInitial == false)
                 {
-                    this.textBox_weighing30.Text += "Successfully!";
-                    this.textBox_weighing30.Text += System.Environment.NewLine;
+                    // this.textBox_weighing30.Text += "Successfully!";
+                    // this.textBox_weighing30.Text += System.Environment.NewLine;
 
                     message = $"The port name has been changed to {portName}";
                     this.textBox_weighing30.Text += message;
@@ -370,6 +396,7 @@ namespace Configuration
                 }
                 else
                 {
+                    this.textBox_weighing30.Text = "";
                     message = $"The default port name is {portName}";
                     this.textBox_weighing30.Text += message;
                     this.textBox_weighing30.Text += System.Environment.NewLine;
@@ -401,8 +428,8 @@ namespace Configuration
                 }
                 if (isInitial == false)
                 {
-                    this.textBox_weighing3.Text += "Successfully!";
-                    this.textBox_weighing3.Text += System.Environment.NewLine;
+                    //this.textBox_weighing3.Text += "Successfully!";
+                    //this.textBox_weighing3.Text += System.Environment.NewLine;
 
                     message = $"The port name has been changed to {portName}";
                     this.textBox_weighing3.Text += message;
@@ -411,6 +438,7 @@ namespace Configuration
                 }
                 else
                 {
+                    this.textBox_weighing3.Text = "";
                     message = $"The default port name is {portName}";
                     this.textBox_weighing3.Text += message;
                     this.textBox_weighing3.Text += System.Environment.NewLine;
@@ -432,6 +460,55 @@ namespace Configuration
         private void button_displaySetting3kg_Click(object sender, EventArgs e)
         {
             DisplaySetting3kg(false);
+        }
+
+        private void comboBox_COM3kg_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var com = comboBox_COM3kg.SelectedItem.ToString();
+            UpdateWeighingScale3kg(com);
+            DisplaySetting3kg(true);
+        }
+        private void comboBox_weighing30kg_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var com = comboBox_COM30kg.SelectedItem.ToString();
+            UpdateWeighingScale30kg(com);
+            DisplaySetting30kg(true);
+        }
+        private void button_About_Click(object sender, EventArgs e)
+        {
+            string content = "Zalo: 0865978241\nEmail: sales3.mrthanh@gmail.com";
+            MessageBox.Show(content, "Infomation",
+                                                      MessageBoxButtons.OK,
+                                                      MessageBoxIcon.Information);
+        }
+
+        private void button_addWebsite_Click(object sender, EventArgs e)
+        {
+            var prompt = new Form2();
+            prompt.FormClosed += Form2_FormClosed;
+            prompt.ShowDialog();
+
+        }
+        private void Form2_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                var BaseDirectory = "C:";
+                var path = @$"{BaseDirectory}\service\signalrServer\appsettings.json";
+                dynamic value = heplers.Common.ReadFile(path);
+                var appsettings = value.AppSettings.Origins;
+                var result = Newtonsoft.Json.JsonConvert.SerializeObject(appsettings, Newtonsoft.Json.Formatting.Indented);
+                this.textBox_weighing30.Text = "";
+                this.textBox_weighing30.Text += result;
+                this.textBox_weighing30.Text += System.Environment.NewLine;
+            }
+            catch
+            {
+                MessageBox.Show("Not found the setting  file!", "Add website",
+                                             MessageBoxButtons.OK,
+                                             MessageBoxIcon.Error);
+            }
+          
         }
     }
 }

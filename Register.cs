@@ -14,7 +14,7 @@ namespace Configuration
     {
         Form _me = new Form();
         private string DriveSerialNumber = Common.GetDriveSerialNumber();
-         IDbConnection db = new SqlConnection("Server=.;Database=license;user id=sa;password=shc@1234");
+         IDbConnection db = new SqlConnection("Server=phanmemcan.vnsosoft.com\\MSSQLSERVER2017,1444;Database=vnsosoft_phanmemcan;user id=vnsosoft_phanmemcan;password=S_d8dh51");
         public Register()
         {
             InitializeComponent();
@@ -39,45 +39,65 @@ namespace Configuration
              var licenseKey = ConfigurationManager.AppSettings["licenseKey"];
             return licenseKey;
         }
-       
+   
         private void button_Confirm_Click(object sender, EventArgs e)
         {
-            string query = "select * from Licenses where LicenseKey = @licenseKey";
+           
+            // Tìm license trong db
+            string query = @"select * from Licenses where LicenseKey = @licenseKey";
             string licenseKey = textBox1.Text;
             if (string.IsNullOrEmpty(licenseKey)) {
-                MessageBox.Show("Key is not Valid!", "Error",
+                MessageBox.Show("Key is not Valid!", "Warning",
                                                       MessageBoxButtons.OK,
                                                       MessageBoxIcon.Warning);
                 return;
             }
             var license = db.Query<dynamic>(query, new { licenseKey = licenseKey }).SingleOrDefault();
+            // Không có trong db thông báo k tìm thấy key
             if (license == null)
             {
                 if (string.IsNullOrEmpty(licenseKey))
                 {
-                    MessageBox.Show("Not found key!", "Error",
+                    MessageBox.Show("Not found key!", "Warning",
                                                           MessageBoxButtons.OK,
                                                           MessageBoxIcon.Warning);
                     return;
                 }
             }
-            if (license.HardwareId == DriveSerialNumber && license.Status.Trim() == "1" && license.Count > 1)
+            // Kiểm tra nếu hardwareId của máy này đã active 1 lần r thì thông báo đã sử dụng
+            if (license.HardwareId == DriveSerialNumber && license.Status == true && license.Count == 1)
             {
-                MessageBox.Show("This key has already been used!", "Error",
+                MessageBox.Show("This key has already been used! \nPlease contact supplier via zalo 0865978241 or email sales3.mrthanh@gmail.com! ", "Warning",
                                                        MessageBoxButtons.OK,
                                                        MessageBoxIcon.Warning);
                 return;
             }
-                var param = new DynamicParameters();
+
+            // Cập nhật hardwareId vào db
+            var pc = SystemInformation.ComputerName;
+            var ip = Common.GetLocalIPAddress();
+            var param = new DynamicParameters();
             param.Add("LicenseKey", licenseKey);
             param.Add("HardwareId", DriveSerialNumber);
+            param.Add("PCName", pc);
+            param.Add("LocalIP", ip);
+            param.Add("ModifiedTime", DateTime.Now);
             param.Add("Count", 1);
-            string query2 = "update Licenses set HardwareId = @HardwareId, Count = @Count where LicenseKey = @LicenseKey";
+            string query2 = @"update Licenses 
+                set HardwareId = @HardwareId,
+                Count = @Count,
+                PCName = @PCName
+                LocalIP = @LocalIP,
+                ModifiedTime = @ModifiedTime,
+                Status = 1
+                where LicenseKey = @LicenseKey";
             db.Execute(query2, param);
-            string query3 = "select * from Licenses where LicenseKey = @licenseKey";
-            var license2 = db.Query<dynamic>(query3, new { licenseKey = licenseKey }).SingleOrDefault();
 
-            if (license2.HardwareId == DriveSerialNumber && license2.Status.Trim() == "1" && license2.Count == 1)
+            // Tìm lại license key trong db
+            string query3 = @"select * from Licenses where LicenseKey = @licenseKey";
+            var license2 = db.Query<dynamic>(query3, new { licenseKey = licenseKey }).SingleOrDefault();
+            // Kiểm tra hardwareId có trùng khớp với máy hiện tại và status = true chưa, nếu chưa thông báo key k hợp lệ
+            if (license2.HardwareId == DriveSerialNumber && license2.Status == true && license2.Count == 1)
             {
                 UpdateLicense();
                 Form form1 = new Form1();
@@ -86,7 +106,7 @@ namespace Configuration
             }
             else
             {
-                MessageBox.Show("Key is not Valid!", "Error",
+                MessageBox.Show("Key is not Valid!", "Warning",
                                                    MessageBoxButtons.OK,
                                                    MessageBoxIcon.Warning);
             }
@@ -117,7 +137,7 @@ namespace Configuration
                 var configuration = ConfigurationManager.
 OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
                 configuration.AppSettings.Settings["licenseKey"].Value = DriveSerialNumber;
-                configuration.Save();
+                configuration.Save(ConfigurationSaveMode.Modified);
                 ConfigurationManager.RefreshSection("appSettings");
             }
             catch (Exception )
@@ -126,19 +146,14 @@ OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
                 MessageBox.Show("Connection is not established", "Error",
                                                  MessageBoxButtons.OK,
                                                  MessageBoxIcon.Error);
+                return;
             }
           
         }
         private void Register_Load(object sender, EventArgs e)
         {
             _me = (Form)sender;
-            //_client = new FireSharp.FirebaseClient(config);
-            //if (_client == null)
-            //{
-            //    MessageBox.Show("Connection is not established", "Error",
-            //                                      MessageBoxButtons.OK,
-            //                                      MessageBoxIcon.Error);
-            //} 
+      
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -146,7 +161,6 @@ OpenExeConfiguration(Assembly.GetExecutingAssembly().Location);
             MessageBox.Show("Can not use register function. Please contact administrator!", "Warning",
                                                       MessageBoxButtons.OK,
                                                       MessageBoxIcon.Warning);
-            //UpdateLicense();
         }
     }
 }
