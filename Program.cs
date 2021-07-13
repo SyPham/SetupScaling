@@ -1,3 +1,4 @@
+using Configuration.heplers;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,10 +21,11 @@ namespace Configuration
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             var licenseKey = ConfigurationManager.AppSettings["licenseKey"];
-            if (string.IsNullOrEmpty(licenseKey))
-                Application.Run(new Register());
-            else
+            var token = Common.GetDriveSerialNumber().ToGenerateLicenseKey();
+            if (licenseKey == token)
                 Application.Run(new Form1());
+            else
+                Application.Run(new Register());
         }
     }
 }

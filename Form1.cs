@@ -356,17 +356,14 @@ namespace Configuration
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _me.Dispose();
-            _me.Close();
             if (SerialPort30kg.IsOpen) SerialPort30kg.Close();
             if (SerialPort3kg.IsOpen) SerialPort3kg.Close();
-
+            _me.Close();
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            SerialPort30kg.Dispose();
-            SerialPort3kg.Dispose();
+            Application.Exit();
         }
         private void DisplaySetting30kg(bool isInitial = true)
         {
@@ -489,6 +486,7 @@ namespace Configuration
             prompt.ShowDialog();
 
         }
+      
         private void Form2_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
@@ -504,11 +502,10 @@ namespace Configuration
             }
             catch
             {
-                MessageBox.Show("Not found the setting  file!", "Add website",
+                MessageBox.Show("Could not find the setting  file!", "Add website",
                                              MessageBoxButtons.OK,
                                              MessageBoxIcon.Error);
             }
-          
         }
     }
 }

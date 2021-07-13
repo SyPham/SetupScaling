@@ -45,14 +45,15 @@ namespace Configuration.heplers
         public static string GetLocalIPAddress()
         {
             var host = Dns.GetHostEntry(Dns.GetHostName());
+            var list = new List<string> { };
             foreach (var ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    return ip.ToString();
+                    list.Add( ip.ToString());
                 }
             }
-            return "";
+            return string.Join(',', list);
         }
         public static dynamic ReadFile(string path)
         {
@@ -99,6 +100,7 @@ namespace Configuration.heplers
      
         public static string ToGenerateLicenseKey(this string number)
         {
+            if (string.IsNullOrEmpty(number)) return "";
             var ASCIIENC = new ASCIIEncoding();
             string strreturn;
             strreturn = Constants.vbNullString;
